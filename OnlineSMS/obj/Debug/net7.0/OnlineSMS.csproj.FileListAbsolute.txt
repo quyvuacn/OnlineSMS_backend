@@ -281,3 +281,5 @@ C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\Microso
 C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\Microsoft.Extensions.Identity.Core.dll
 C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\Microsoft.Extensions.Options.dll
+C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\Infobip.Api.Client.dll
+C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\Polly.dll
