@@ -1,14 +1,26 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OnlineSMS.Models
 {
+    [Index(nameof(PhoneNumber), IsUnique = true)]
+    [Index(nameof(UserName), IsUnique = false)]
+
     public class User : IdentityUser
     {
         public override string Id { get; set; } = Guid.NewGuid().ToString();
-        public override string UserName { get; set; }
 
+        public override string PhoneNumber { 
+            get => base.PhoneNumber; 
+            set=> base.PhoneNumber = value;
+        }
+
+        public override string UserName { get => base.UserName; set => base.UserName=value; }
+        public override string Email { get => base.Email; set => base.Email=value; }
+
+        public UserProfile? UserProfile { get; set; }
         public ICollection<UserService>? Services { get; set; }
 
 
@@ -16,7 +28,6 @@ namespace OnlineSMS.Models
         public ICollection<Friendship>? UserRequests { get; set; }
         [InverseProperty("UserAccept")]
         public ICollection<Friendship>? UserAccepts { get; set; }
-        public ICollection<UserProfile>? UserProfiles { get; set; }
         public ICollection<MemberBoxchat>? MemberBoxes { get; set; }
         [InverseProperty("UserSend")]
         public ICollection<Message> Messages { get; set; }

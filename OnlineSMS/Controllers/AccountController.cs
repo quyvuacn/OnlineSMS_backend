@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
 using OnlineSMS.RequestModels;
@@ -17,7 +18,7 @@ namespace OnlineSMS.Controllers
         {
             this.accountService = accountService;
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -28,7 +29,14 @@ namespace OnlineSMS.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
+
             var result = await accountService.Login(model);
+            if (result.IsSuccess)
+            {
+                CookieOptions options = new CookieOptions();
+                options.Expires = DateTime.Now.AddDays(30);
+                Response.Cookies.Append("token","vuvietquyacn", options);
+            }
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

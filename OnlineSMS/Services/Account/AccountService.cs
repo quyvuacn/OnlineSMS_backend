@@ -61,6 +61,7 @@ namespace OnlineSMS.Services.Account
                     Data = new
                     {
                         phoneNumber = user.PhoneNumber, 
+                        userName = user.UserName,
                         token = new JwtSecurityTokenHandler().WriteToken(token)
                     }
                 };
@@ -69,7 +70,7 @@ namespace OnlineSMS.Services.Account
             {
                 return new RequestResult
                 {
-                    Message = Constants.LoginResultMessage.LockedOut
+                    Message = Constants.LoginResultMessage.LockedOut,
                 };
             }
 
@@ -81,58 +82,84 @@ namespace OnlineSMS.Services.Account
 
         public async Task<RequestResult> Register(RegisterModel model)
         {
-            var userExists = await userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == model.PhoneNumber);
+            var userPhoneExists = await userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == model.PhoneNumber);
+            var userEmailExists = await userManager.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             var phoneNumberVerified = await context.VerificationCode.FirstOrDefaultAsync(v => v.PhoneNumber == model.PhoneNumber);
 
-            if (userExists != null)
+            if (phoneNumberVerified == null)
             {
                 return new RequestResult
                 {
-                    Message = Constants.RegisterResultMessage.AccountExist
+                    Message = Constants.RegisterResultMessage.PhoneNumberNotVerified,
+                    Data = new
+                    {
+                        Message = Constants.RegisterResultMessage.PhoneNumberNotVerified,
+                        Field = "Verify Code"
+                    }
                 };
             }
-            else if(phoneNumberVerified == null || !phoneNumberVerified.Verified)
+
+            if (model.VerifyCode == phoneNumberVerified.Code)
             {
+                phoneNumberVerified.UsedTime = DateTime.UtcNow;
+            }
+
+            if (userPhoneExists != null)
+            {
+                return new RequestResult
+                {
+                    Message = Constants.RegisterResultMessage.PhonenumberExist
+                };
+            }
+            else if (userEmailExists != null)
+            {
+                return new RequestResult
+                {
+                    Message = Constants.RegisterResultMessage.EmailExist
+                };
+            }
+            else if (model.VerifyCode != phoneNumberVerified.Code)
+            {
+                
                 return new RequestResult
                 {
                     Message = Constants.RegisterResultMessage.PhoneNumberNotVerified
                 };
             }
-            else if(phoneNumberVerified.ExpirationTime > DateTime.Now)
+            else if (DateTime.Now > phoneNumberVerified.ExpirationTime)
             {
                 return new RequestResult
                 {
                     Message = Constants.VerificationCodeMessage.CodeExpired
                 };
             }
-
+            else if (phoneNumberVerified.UsedTime == null)
+            {
+                return new RequestResult
+                {
+                    Message = Constants.VerificationCodeMessage.CodeUsed
+                };
+            }
+            
             User user = new()
             {
                 PhoneNumber = model.PhoneNumber,
-                UserName = model.UserName
+                UserName = model.UserName,
+                Email = model.Email
             };
 
             var resultCreateUser = await userManager.CreateAsync(user, model.Password);
 
             if (!resultCreateUser.Succeeded)
             {
-                List<string> errors = new List<string>();
-
-                foreach (var error in resultCreateUser.Errors)
-                {
-                    errors.Add(error.Description.ToString());
-                }
                 return new RequestResult
                 {
                     Message = Constants.RegisterResultMessage.BadRequest,
-                    Data = new
-                    {
-                        errors
-                    }
                 };
             }
 
             await userManager.AddToRoleAsync(user, "User");
+            await context.SaveChangesAsync();
 
             return new RequestResult
             {

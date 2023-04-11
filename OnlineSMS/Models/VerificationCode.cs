@@ -17,7 +17,7 @@ namespace OnlineSMS.Models
 
         public string Code { get; set;}
         public int VerificationCount { get; set; } = 0;
-        public bool Verified { get; set; } = false;
+        public DateTime? UsedTime { get; set; }
         public DateTime CreatedTime { get; set; } = DateTime.Now;
         public DateTime ExpirationTime { get; set; } = DateTime.Now.AddMinutes(5);
         public bool PhoneLockoutEnabled { get; set; } = false;
@@ -28,6 +28,7 @@ namespace OnlineSMS.Models
             Random random = new Random();
             Code = random.Next(0, 999999).ToString("D6");
             CreatedTime = DateTime.Now;
+            UsedTime = null;
             ExpirationTime = DateTime.Now.AddMinutes(5);
             VerificationCount++;
             if (VerificationCount > 5)

@@ -364,6 +364,7 @@ namespace OnlineSMS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -388,7 +389,8 @@ namespace OnlineSMS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -414,6 +416,11 @@ namespace OnlineSMS.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
+                    b.HasIndex("UserName");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -430,6 +437,14 @@ namespace OnlineSMS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Designation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FistName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -451,7 +466,8 @@ namespace OnlineSMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("UserProfile");
                 });
@@ -514,11 +530,11 @@ namespace OnlineSMS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("UsedTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("VerificationCount")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Verified")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -666,8 +682,8 @@ namespace OnlineSMS.Migrations
             modelBuilder.Entity("OnlineSMS.Models.UserProfile", b =>
                 {
                     b.HasOne("OnlineSMS.Models.User", "User")
-                        .WithMany("UserProfiles")
-                        .HasForeignKey("UserId")
+                        .WithOne("UserProfile")
+                        .HasForeignKey("OnlineSMS.Models.UserProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -724,7 +740,7 @@ namespace OnlineSMS.Migrations
 
                     b.Navigation("UserAccepts");
 
-                    b.Navigation("UserProfiles");
+                    b.Navigation("UserProfile");
 
                     b.Navigation("UserRequests");
                 });
