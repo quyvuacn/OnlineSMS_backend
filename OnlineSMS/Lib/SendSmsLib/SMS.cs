@@ -23,6 +23,7 @@ namespace OnlineSMS.Lib.SendSmsLib
         }
         public bool SendTo(string recipient, string code)
         {
+            Console.WriteLine($"Your verification code is : {code}");
             var message = $"Your verification code is : {code}";
             var configuration = new Configuration()
             {

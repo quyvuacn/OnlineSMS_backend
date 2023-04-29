@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 
 namespace OnlineSMS.Models
 {
@@ -32,5 +31,10 @@ namespace OnlineSMS.Models
         [InverseProperty("UserSend")]
         public ICollection<Message> Messages { get; set; }
         public ICollection<MessageReact> MessageReacts { get; set; }
+        public ICollection<UserCuisine>? UserCuisines { get; set; }
+        public ICollection<UserHobbie>? UserHobbies { get; set; }
+        public ICollection<UserWorkEducation>? UserWorkEducation { get; set; }
+        public ICollection<UserConnection>? UserConnection { get; set; }
+        public ICollection<UnreadMessages>? UnreadMessages { get; set; }
     }
 }

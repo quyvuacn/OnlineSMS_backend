@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineSMS.Data;
 using OnlineSMS;
-using OnlineSMS.Models;
-
+using OnlineSMS.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +9,9 @@ ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddDbContext<OnlineSMSContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("OnlineSMSContext") ?? throw new InvalidOperationException("Connection string 'OnlineSMSContext' not found.")));
+
+// Add SignalR 
+builder.Services.AddSignalR();
 
 //My Services
 builder.Services.AddServices(configuration);
@@ -25,8 +27,11 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
-           .AllowAnyHeader();
+           .WithOrigins("http://localhost:3000")
+           .AllowAnyHeader()
+           .AllowCredentials();
 }));
+
 
 
 
@@ -51,10 +56,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ChatHub>("/chathub");
+});
+
+app.UseHttpsRedirection();
+
+
+
 app.MapControllers();
+
+
 
 app.Run();

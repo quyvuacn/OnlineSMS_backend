@@ -1,28 +1,18 @@
 ﻿
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 using OnlineSMS.RequestModels;
 using OnlineSMS.Services.Account;
-using Polly;
 
 namespace OnlineSMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : ControllerBaseApi
     {
-        private AccountService accountService;
-
+        private readonly AccountService accountService;
         public AccountController(AccountService accountService)
         {
             this.accountService = accountService;
-        }
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            return Ok(new { name = "Vũ Viết Quý" });
         }
 
         [HttpPost]
@@ -31,12 +21,6 @@ namespace OnlineSMS.Controllers
         {
 
             var result = await accountService.Login(model);
-            if (result.IsSuccess)
-            {
-                CookieOptions options = new CookieOptions();
-                options.Expires = DateTime.Now.AddDays(30);
-                Response.Cookies.Append("token","vuvietquyacn", options);
-            }
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

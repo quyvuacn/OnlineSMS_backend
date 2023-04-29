@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using OnlineSMS.Data;
 using OnlineSMS.Models;
 using OnlineSMS.Services.Account;
+using OnlineSMS.Services.FriendshipService;
 using System.Text;
+using OnlineSMS.Services.ChatHub;
+using OnlineSMS.Services.Boxchat;
 
 namespace OnlineSMS
 {
@@ -41,6 +45,11 @@ namespace OnlineSMS
 
             //Add Logic Services
             services.AddScoped<AccountService>();
+            services.AddScoped<Services.UserService.UserService>();
+            services.AddScoped<FriendshipService>();
+            
+            services.AddScoped<ChatHubService>();
+            services.AddScoped<BoxchatService>();
 
             return services;
         }

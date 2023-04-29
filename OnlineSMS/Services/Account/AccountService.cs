@@ -3,30 +3,32 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OnlineSMS.Data;
 using OnlineSMS.Lib.SendSmsLib;
-using OnlineSMS.Models;
 using OnlineSMS.RequestModels;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
-using OnlineSMS;
-using Azure;
+using OnlineSMS.Models;
+using OnlineSMS.Services.ChatHub;
 
 namespace OnlineSMS.Services.Account
 {
     public class AccountService : IAccountService
     {
+        
         private readonly UserManager<User> userManager;
         private SignInManager<User> signInManager;
         private readonly OnlineSMSContext context;
         private readonly IConfiguration configuration;
+        private readonly ChatHubService chatHubService;
 
-        public AccountService(UserManager<User> userManager, OnlineSMSContext context, IConfiguration configuration, SignInManager<User> signInManager)
+
+        public AccountService(UserManager<User> userManager, OnlineSMSContext context, IConfiguration configuration, SignInManager<User> signInManager,ChatHubService chatHubService)
         {
             this.userManager = userManager;
             this.context = context;
             this.configuration = configuration;
             this.signInManager = signInManager;
+            this.chatHubService = chatHubService;
         }
 
         public async Task<RequestResult> Login(LoginModel model)
@@ -36,42 +38,58 @@ namespace OnlineSMS.Services.Account
             bool isPersistent = true; // Lưu cookie = true
             bool lockoutOnFailure = true; //  Khóa tk nếu đăng nhập sai nhiều lần = false
 
-            //Check  mật khẩu và lưu phiên đăng nhập -> UserLogins
-            var checkIsValid = await signInManager.PasswordSignInAsync(user, model.Password, isPersistent, lockoutOnFailure);
+            
 
-            if (user != null && checkIsValid.Succeeded)
+            if (user != null)
             {
+                //Check  mật khẩu và lưu phiên đăng nhập -> UserLogins
+                var checkIsValid = await signInManager.PasswordSignInAsync(user, model.Password, isPersistent, lockoutOnFailure);
                 var userRoles = await userManager.GetRolesAsync(user);
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.MobilePhone, user.PhoneNumber)
-                };
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-                //GetToken
-                var token = GetToken(authClaims);
 
-                return new RequestResult
+                if (checkIsValid.Succeeded)
                 {
-                    IsSuccess = true,
-                    Message = Constants.LoginResultMessage.Success,
-                    Data = new
+                    var authClaims = new List<Claim>
+                {
+                    new Claim("UserName", user.UserName),
+                    new Claim("PhoneNumber", user.PhoneNumber),
+                    new Claim("Email",user.Email),
+                    new Claim("UserId",user.Id)
+                };
+                    foreach (var userRole in userRoles)
                     {
-                        phoneNumber = user.PhoneNumber, 
-                        userName = user.UserName,
-                        token = new JwtSecurityTokenHandler().WriteToken(token)
+                        authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                     }
-                };
-            }
-            else if (checkIsValid.IsLockedOut)
-            {
-                return new RequestResult
+                    //GetToken
+                    var token = GetToken(authClaims);
+
+                    var result = await chatHubService.ConnectToChatHub(user.Id);
+
+                    var connectionId = result.Data;
+
+                    Console.WriteLine(connectionId);
+
+                    return new RequestResult
+                    {
+                        IsSuccess = true,
+                        Message = Constants.LoginResultMessage.Success,
+                        Data = new
+                        {
+                            phoneNumber = user.PhoneNumber,
+                            userName = user.UserName,
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            userId = user.Id,
+                            connectionId
+                        }
+                    };
+                }
+                else if (checkIsValid.IsLockedOut)
                 {
-                    Message = Constants.LoginResultMessage.LockedOut,
-                };
+                    return new RequestResult
+                    {
+                        Message = Constants.LoginResultMessage.LockedOut,
+                    };
+                }
+               
             }
 
             return new RequestResult
@@ -98,7 +116,6 @@ namespace OnlineSMS.Services.Account
                     }
                 };
             }
-
             if (model.VerifyCode == phoneNumberVerified.Code)
             {
                 phoneNumberVerified.UsedTime = DateTime.UtcNow;

@@ -48,5 +48,15 @@ namespace OnlineSMS.Data
         public DbSet<VerificationCode> VerificationCode { get; set; } = default!;
         public DbSet<Service> Service { get; set; } = default!;
         public DbSet<UserService> UserService { get; set; } = default!;
+        public DbSet<UserProfile> UserProfile { get; set; } = default!;
+        public DbSet<UserHobbie> UserHobbie { get; set; } = default!;
+        public DbSet<UserCuisine> UserCuisine { get; set; } = default!;
+        public DbSet<Friendship> Friendship { get; set; } = default!;
+        public DbSet<UserConnection> UserConnection { get; set; } = default!;
+        public DbSet<Boxchat> Boxchat { get; set; } = default!;
+        public DbSet<MemberBoxchat> MemberBoxchat { get; set; } = default!;
+        public DbSet<Message> Message { get; set; } = default!;
+        public DbSet<UnreadMessages> UnreadMessages { get; set; } = default!;
+
     }
 }

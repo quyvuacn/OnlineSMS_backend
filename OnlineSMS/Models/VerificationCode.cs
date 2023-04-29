@@ -9,6 +9,10 @@ namespace OnlineSMS.Models
     {
         public VerificationCode(string phoneNumber)
         {
+            CreatedTime = DateTime.Now;
+            ExpirationTime = DateTime.Now.AddMinutes(5);
+            PhoneLockoutEnabled = false;
+            VerificationCount = 0;
             PhoneNumber = phoneNumber;
             newVerificationCode();
         }
@@ -16,11 +20,11 @@ namespace OnlineSMS.Models
         public string PhoneNumber { get; set; }
 
         public string Code { get; set;}
-        public int VerificationCount { get; set; } = 0;
+        public int VerificationCount { get; set; } 
         public DateTime? UsedTime { get; set; }
-        public DateTime CreatedTime { get; set; } = DateTime.Now;
-        public DateTime ExpirationTime { get; set; } = DateTime.Now.AddMinutes(5);
-        public bool PhoneLockoutEnabled { get; set; } = false;
+        public DateTime CreatedTime { get; set; } 
+        public DateTime ExpirationTime { get; set; } 
+        public bool PhoneLockoutEnabled { get; set; } 
         public DateTime PhoneLockoutEnd { get; set; } 
 
         public void newVerificationCode()
