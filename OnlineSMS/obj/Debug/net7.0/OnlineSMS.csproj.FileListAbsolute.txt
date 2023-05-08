@@ -1,6 +1,5 @@
 C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\appsettings.Development.json
 C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\appsettings.json
-C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\OnlineSMS.staticwebassets.runtime.json
 C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\OnlineSMS.exe
 C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\OnlineSMS.deps.json
 C:\Users\pc\OneDrive\Desktop\www\zalo_backend\OnlineSMS\bin\Debug\net7.0\OnlineSMS.runtimeconfig.json

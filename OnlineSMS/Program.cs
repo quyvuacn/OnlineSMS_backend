@@ -26,7 +26,8 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
-           .WithOrigins("http://localhost:3000", "http://192.168.1.8:3000", "https://online-sms-five.vercel.app/")
+           .SetIsOriginAllowed((host) => true)
+           .WithOrigins("http://localhost:3000", "https://online-sms-five.vercel.app/")
            .AllowAnyHeader()
            .AllowCredentials();
 }));

@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using OnlineSMS.Data;
 using OnlineSMS.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OnlineSMS.RequestModels;
 
@@ -239,15 +236,32 @@ namespace OnlineSMS.Controllers
 
         public async Task ReloadBoxchats(CallTo callTo)
         {
-            string userTargetId = callTo.UserTargetId;
+            var userTargetId = callTo.UserTargetId;
+            var listUserTargetId = callTo.ListUserTargetId;
 
-            var userConnections = await onlineSMSContext.UserConnection
+            List<string> listConnection = new List<string>();
+
+            if (userTargetId != null)
+            {
+                var userConnections = await onlineSMSContext.UserConnection
                 .Where(u => u.UserId == userTargetId)
                 .ToListAsync();
 
-            var listConnection = userConnections.Select(c => c.ConnectionId).ToList();
+                listConnection = userConnections.Select(c => c.ConnectionId).ToList();
+            }
 
-            await Clients.Clients(listConnection).SendAsync("ListenReloadBoxchats", new {} );
+            if(listUserTargetId != null)
+            {
+                Console.WriteLine("==================");
+                Console.WriteLine("Create Group.");
+                var userConnections = await onlineSMSContext.UserConnection
+                .Where(u => listUserTargetId.Contains(u.UserId))
+                .ToListAsync();
+
+                listConnection = userConnections.Select(c => c.ConnectionId).ToList();
+            }
+
+            await Clients.Clients(listConnection).SendAsync("ListenReloadBoxchats", new { });
         }
 
         private string GetUserId()
