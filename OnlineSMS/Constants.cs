@@ -50,6 +50,12 @@ namespace OnlineSMS
             public const int Hide = 2;
             public const int Deleted = 0;
         }
+
+        public class CallType
+        {
+            public const string Video = "Video";
+            public const string Audio = "Audio";
+        }
     }
     
 }

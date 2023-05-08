@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineSMS.RequestModels;
-using System.IdentityModel.Tokens.Jwt;
 
 
 namespace OnlineSMS.Controllers
@@ -76,6 +75,15 @@ namespace OnlineSMS.Controllers
         public async Task<IActionResult> CreateCuisine(MoreProfileItem profileItem)
         {
             var result = await userService.CreateCuisine(GetUserId(), profileItem.Name);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        
+        [Authorize(Roles = "User")]
+        [Route("update-avatar")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateAvatar(UpdateAvatarModel updateAvatar)
+        {
+            var result = await userService.UpdateAvatar(GetUserId(), updateAvatar.BlobUrl);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }

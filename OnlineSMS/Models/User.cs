@@ -35,6 +35,6 @@ namespace OnlineSMS.Models
         public ICollection<UserHobbie>? UserHobbies { get; set; }
         public ICollection<UserWorkEducation>? UserWorkEducation { get; set; }
         public ICollection<UserConnection>? UserConnection { get; set; }
-        public ICollection<UnreadMessages>? UnreadMessages { get; set; }
+        public ICollection<UnreadMessage>? UnreadMessages { get; set; }
     }
 }

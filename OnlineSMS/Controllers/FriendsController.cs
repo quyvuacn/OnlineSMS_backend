@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineSMS.Services.FriendshipService;
 using OnlineSMS.RequestModels;
-
+using Microsoft.AspNet.SignalR;
+using Authorization = Microsoft.AspNetCore.Authorization;
 
 namespace OnlineSMS.Controllers
 {
@@ -18,7 +18,7 @@ namespace OnlineSMS.Controllers
         }
 
 
-        [Authorize(Roles = "User")]
+        [Authorization.Authorize(Roles = "User")]
         [HttpPost]
         public async Task<IActionResult> Index(SearchPhonenumber search)
         {
@@ -26,7 +26,7 @@ namespace OnlineSMS.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize(Roles = "User")]
+        [Authorization.Authorize(Roles = "User")]
         [Route("add-friend")]
         [HttpPost]
         public async Task<IActionResult> AddFriend(AddFriend friend)
@@ -40,7 +40,7 @@ namespace OnlineSMS.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         
-        [Authorize(Roles = "User")]
+        [Authorization.Authorize(Roles = "User")]
         [Route("delete-friend-request")]
         [HttpPost]
         public async Task<IActionResult> DeleteFriendRequest(FriendRequest friendRequest)
@@ -49,7 +49,7 @@ namespace OnlineSMS.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize(Roles = "User")]
+        [Authorization.Authorize(Roles = "User")]
         [Route("agree-friend-request")]
         [HttpPost]
         public async Task<IActionResult> AgreeFriendRequest(FriendRequest friendRequest)
@@ -58,7 +58,7 @@ namespace OnlineSMS.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         
-        [Authorize(Roles = "User")]
+        [Authorization.Authorize(Roles = "User")]
         [Route("unfriend")]
         [HttpPost]
         public async Task<IActionResult> Unfriend(FriendRequest friendRequest)
@@ -67,7 +67,7 @@ namespace OnlineSMS.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize(Roles = "User")]
+        [Authorization.Authorize(Roles = "User")]
         [Route("list-friend")]
         [HttpGet]
         public async Task<IActionResult> ListFriend()
@@ -76,7 +76,7 @@ namespace OnlineSMS.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize(Roles = "User")]
+        [Authorization.Authorize(Roles = "User")]
         [Route("list-friend-request")]
         [HttpGet]
         public async Task<IActionResult> ListFriendRequest()
@@ -85,7 +85,7 @@ namespace OnlineSMS.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize(Roles = "User")]
+        [Authorization.Authorize(Roles = "User")]
         [Route("list-friend-accept")]
         [HttpGet]
         public async Task<IActionResult> ListFriendAccept()
@@ -93,5 +93,9 @@ namespace OnlineSMS.Controllers
             var result = await friendshipService.ListFriendAccept(GetUserId());
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+
+
+
+       
     }
 }

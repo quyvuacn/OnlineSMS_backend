@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineSMS.Data;
 using OnlineSMS.Models;
 using OnlineSMS.RequestModels;
+using OnlineSMS.Services.UploadFile;
 using System.Text.Json;
 
 namespace OnlineSMS.Services.UserService
@@ -12,11 +13,13 @@ namespace OnlineSMS.Services.UserService
     {
         private readonly UserManager<User> userManager;
         private readonly OnlineSMSContext context;
+        private readonly UploadFileService uploadFile;
 
-        public UserService(UserManager<User> userManager, OnlineSMSContext context)
+        public UserService(UserManager<User> userManager, OnlineSMSContext context,UploadFileService uploadFile)
         {
             this.userManager = userManager;
             this.context = context;
+            this.uploadFile = uploadFile;
         }
 
         public async Task<RequestResult> GetOverviewProfile(string userId)
@@ -200,6 +203,22 @@ namespace OnlineSMS.Services.UserService
             };
         }
 
+
+        public async Task<RequestResult> UpdateAvatar(string userId,string blobUrl)
+        {
+            var result = uploadFile.UploadToPath(userId,blobUrl);
+
+            if (result.IsSuccess)
+            {
+                var userProfile = await context.UserProfile.Where(u => u.UserId == userId).FirstOrDefaultAsync();
+                userProfile.Avatar = result.Message;
+
+                context.UserProfile.Update(userProfile);
+                await context.SaveChangesAsync();
+            }
+
+            return result;
+        }
 
     }
 }

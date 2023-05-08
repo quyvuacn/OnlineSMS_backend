@@ -40,6 +40,11 @@ namespace OnlineSMS.Data
                 .WithMany(m=>m.Reacts)
                 .HasForeignKey(mr => mr.MessageId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(f => f.UserSend)
+                .WithMany(u => u.Messages)
+                .HasForeignKey(f => f.UserSendId);
         }
 
 
@@ -56,7 +61,6 @@ namespace OnlineSMS.Data
         public DbSet<Boxchat> Boxchat { get; set; } = default!;
         public DbSet<MemberBoxchat> MemberBoxchat { get; set; } = default!;
         public DbSet<Message> Message { get; set; } = default!;
-        public DbSet<UnreadMessages> UnreadMessages { get; set; } = default!;
-
+        public DbSet<UnreadMessage> UnreadMessage { get; set; } = default!;
     }
 }

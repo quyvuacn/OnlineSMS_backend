@@ -9,6 +9,8 @@ using OnlineSMS.Services.FriendshipService;
 using System.Text;
 using OnlineSMS.Services.ChatHub;
 using OnlineSMS.Services.Boxchat;
+using Microsoft.AspNetCore.Hosting;
+using OnlineSMS.Services.UploadFile;
 
 namespace OnlineSMS
 {
@@ -43,7 +45,9 @@ namespace OnlineSMS
                 };
             });
 
+
             //Add Logic Services
+            services.AddScoped<UploadFileService>();
             services.AddScoped<AccountService>();
             services.AddScoped<Services.UserService.UserService>();
             services.AddScoped<FriendshipService>();

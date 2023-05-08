@@ -17,7 +17,6 @@ builder.Services.AddSignalR();
 builder.Services.AddServices(configuration);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -27,7 +26,7 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
-           .WithOrigins("http://localhost:3000")
+           .WithOrigins("http://localhost:3000", "http://192.168.1.8:3000", "https://online-sms-five.vercel.app/")
            .AllowAnyHeader()
            .AllowCredentials();
 }));
@@ -55,6 +54,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// Use public file
+app.UseStaticFiles();
 
 app.UseRouting();
 
@@ -62,7 +63,7 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<ChatHub>("/chathub");
+    endpoints.MapHub<Hub>("/chathub");
 });
 
 app.UseHttpsRedirection();

@@ -1,10 +1,14 @@
-﻿namespace OnlineSMS.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OnlineSMS.Models
 {
     public class Message
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string BoxchatId { get; set; }
         public string UserSendId { get; set; }
+        public string UserFullName { get; set; }
+        public string? UserAvatar { get; set; }
         public int Status { get; set; }
         public string Type { get; set; }
         public string Content { get; set; }
@@ -16,6 +20,5 @@
 
         public ICollection<MessageMedia> Media { get; set; }
         public ICollection<MessageReact> Reacts { get; set; }
-
     }
 }

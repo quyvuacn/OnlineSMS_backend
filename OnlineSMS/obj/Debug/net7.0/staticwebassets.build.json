@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "W8OD9gs+r2vSRbjkw+jbzG+IeuuryhI8ydEM4NqkpI8=",
+  "Hash": "COdM6aMVAFLlJlNuui6inRHeYhHn7rrT9knegtJOYaI=",
   "Source": "OnlineSMS",
   "BasePath": "_content/OnlineSMS",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "OnlineSMS\\wwwroot",
+      "Source": "OnlineSMS",
+      "ContentRoot": "C:\\Users\\pc\\OneDrive\\Desktop\\www\\zalo_backend\\OnlineSMS\\wwwroot\\",
+      "BasePath": "_content/OnlineSMS",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }

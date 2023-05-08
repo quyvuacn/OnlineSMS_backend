@@ -38,7 +38,27 @@ namespace OnlineSMS.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        [Route("read-all-messages")]
+        public async Task<IActionResult> ReadAllMessages(BoxchatMessages boxchat)
+        {
+            var result = await boxchatService.SetReadAllMessasesBoxchat(GetUserId(), boxchat.BoxchatId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
         
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        [Route("create-group")]
+        public async Task<IActionResult> CreateGroup(CreateGroup group)
+        {
+            group.Members.Add(GetUserId());
+
+            var result = await boxchatService.CreateGroup(group);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+
     }
 
 

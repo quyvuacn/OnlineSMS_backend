@@ -160,6 +160,18 @@ namespace OnlineSMS.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastMessageContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastUserSendFullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastUserSendId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -257,6 +269,13 @@ namespace OnlineSMS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserAvatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserFullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserSendId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -351,13 +370,14 @@ namespace OnlineSMS.Migrations
                     b.ToTable("Service");
                 });
 
-            modelBuilder.Entity("OnlineSMS.Models.UnreadMessages", b =>
+            modelBuilder.Entity("OnlineSMS.Models.UnreadMessage", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("BoxchatId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MessageId")
                         .IsRequired()
@@ -369,9 +389,11 @@ namespace OnlineSMS.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BoxchatId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("UnreadMessages");
+                    b.ToTable("UnreadMessage");
                 });
 
             modelBuilder.Entity("OnlineSMS.Models.User", b =>
@@ -808,8 +830,14 @@ namespace OnlineSMS.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OnlineSMS.Models.UnreadMessages", b =>
+            modelBuilder.Entity("OnlineSMS.Models.UnreadMessage", b =>
                 {
+                    b.HasOne("OnlineSMS.Models.Boxchat", null)
+                        .WithMany("UnreadMessages")
+                        .HasForeignKey("BoxchatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("OnlineSMS.Models.User", null)
                         .WithMany("UnreadMessages")
                         .HasForeignKey("UserId")
@@ -888,6 +916,8 @@ namespace OnlineSMS.Migrations
                     b.Navigation("MemberBoxes");
 
                     b.Navigation("Messages");
+
+                    b.Navigation("UnreadMessages");
                 });
 
             modelBuilder.Entity("OnlineSMS.Models.Message", b =>

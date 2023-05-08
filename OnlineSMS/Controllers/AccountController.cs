@@ -57,5 +57,14 @@ namespace OnlineSMS.Controllers
 
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        
+        [HttpGet]
+        [Route("creare-account-test")]
+        public async Task<IActionResult> CreareAccountTest()
+        {
+            var result = await accountService.CreareAccountTest();
+
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
     }
 }

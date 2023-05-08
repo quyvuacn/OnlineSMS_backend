@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OnlineSMS.Models;
+using System.Net.WebSockets;
 
 namespace OnlineSMS.Data
 {
     public class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new OnlineSMSContext(
                 serviceProvider.GetRequiredService<

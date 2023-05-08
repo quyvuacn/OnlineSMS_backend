@@ -10,11 +10,11 @@ namespace OnlineSMS.Services.ChatHub
     public class ChatHubService
     {
 
-        private readonly IHubContext<Controllers.ChatHub> hubContext;
+        private readonly IHubContext<Controllers.Hub> hubContext;
         private readonly IConfiguration configuration;
         private readonly OnlineSMSContext onlineSMSContext;
 
-        public ChatHubService(IHubContext<Controllers.ChatHub> hubContext, IConfiguration configuration, OnlineSMSContext onlineSMSContext)
+        public ChatHubService(IHubContext<Controllers.Hub> hubContext, IConfiguration configuration, OnlineSMSContext onlineSMSContext)
         {
             this.hubContext = hubContext;
             this.configuration = configuration;

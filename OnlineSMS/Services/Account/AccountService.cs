@@ -218,6 +218,48 @@ namespace OnlineSMS.Services.Account
             };
         }
 
+        public async Task<RequestResult> CreareAccountTest()
+        {
+            if (!userManager.Users.Any())
+            {
+                User user = new()
+                {
+                    PhoneNumber = "+84326459773",
+                    UserName = "vuvietquy",
+                    Email = "vuvietquyacn@gmail.com"
+                };
+
+                await userManager.CreateAsync(user, "Acn@2003");
+                await userManager.AddToRoleAsync(user, "User");
+
+                User user2 = new()
+                {
+                    PhoneNumber = "+84392156772",
+                    UserName = "vuvietson",
+                    Email = "vuvietson@gmail.com"
+                };
+
+                await userManager.CreateAsync(user2, "Acn@2003");
+                await userManager.AddToRoleAsync(user2, "User");
+
+                User user3 = new()
+                {
+                    PhoneNumber = "+84969264559",
+                    UserName = "lamthibe",
+                    Email = "lamthibe@gmail.com"
+                };
+
+                await userManager.CreateAsync(user3, "Acn@2003");
+                await userManager.AddToRoleAsync(user3, "User");
+            }
+            
+            return new RequestResult
+            {
+                IsSuccess = true
+            };
+
+        }
+
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
