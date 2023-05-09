@@ -4,6 +4,8 @@ using OnlineSMS.Data;
 using OnlineSMS.Models;
 using Microsoft.EntityFrameworkCore;
 using OnlineSMS.RequestModels;
+using Polly;
+using static OnlineSMS.Constants;
 
 namespace OnlineSMS.Controllers
 {
@@ -80,7 +82,7 @@ namespace OnlineSMS.Controllers
                 UserSendId = userSendId,
                 UserAvatar = userSendProfile.Avatar,
                 UserFullName = userSendProfile.FullName,
-                Status = Constants.StatusBoxChatMessage.Show,
+                Status = StatusBoxChatMessage.Show,
                 Type = type,
                 Content = dataMessage,
                 StartDate = DateTime.Now,

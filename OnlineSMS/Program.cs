@@ -2,6 +2,7 @@
 using OnlineSMS.Data;
 using OnlineSMS;
 using OnlineSMS.Controllers;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,16 @@ builder.Services.AddDbContext<OnlineSMSContext>(options =>
 
 // Add SignalR 
 builder.Services.AddSignalR();
+//
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Xóa yêu cầu mật khẩu tại đây
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 8; // Đặt độ dài mật khẩu yêu cầu là 0
+});
 
 //My Services
 builder.Services.AddServices(configuration);
